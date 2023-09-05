@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slick Playground</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="pano.css">
+</head>
+<body>
+  <div class="pano-container">
+    <section id="grab" class="Prototype-Panoramic">
+    <div><img src="img/1.png"></div>
+    <div data-audio="audio1"><img src="img/2.png"></div>
+    <div data-audio="audio1"><img src="img/3.png"></div>
+    <div data-audio="audio2"><img src="img/4.png"></div>
+    <div data-audio="audio2"><img src="img/5.png"></div>
+    <div data-audio="audio3"><img src="img/6.png"></div>
+    <div data-audio="audio4"><img src="img/7.png"></div>
+    <div data-audio="audio3"><img src="img/8.png"></div>
+    <div><img src="img/9.png"></div>
+    <div data-audio="audio3"><img src="img/9.png"></div>
+  </section>
+  </div>
+
+  <audio id="audio1" src="audio/audio1.mp3"></audio>
+  <audio id="audio2" src="audio/audio2.mp3"></audio>
+  <audio id="audio3" src="audio/audio5.mp3"></audio>
+  <audio id="audio4" src="audio/audio4.mp3"></audio>
+
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+  <script src="pano.min.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+    $(document).on('ready', function() { 
+      var currentAudio = null;
+
+      $("audio").each(function() {
+        this.pause();
+        this.volume = 0;
+      });
+
+      $(".pano").on("afterChange", function(event, slick, currentSlide) {
+  
+        $("audio").each(function() {
+            this.play();
+        });
+
+        var $currentSlide = $(slick.$slides[currentSlide]);
+        var audioId = $currentSlide.attr("data-audio");
+        
+        if (audioId) {
+          var audio = $("#" + audioId)[0];         
+          if (currentAudio !== audio) {
+            $(currentAudio).animate({ volume: 0 }, 2000);
+            $(audio).prop("volume", 0).animate({ volume: 1 },2000);      
+          }
+          currentAudio = audio;
+        }
+      });
+
+    });
+    
+    const grabElement = document.getElementById('grab');
+
+        grabElement.addEventListener('mousedown', () => {
+            grabElement.classList.add('grabbing'); 
+        });
+
+        grabElement.addEventListener('mouseup', () => {
+            grabElement.classList.remove('grabbing');
+        });
+
+  </script>
+</body>
+</html>
